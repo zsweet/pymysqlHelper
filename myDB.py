@@ -1,3 +1,4 @@
+# coding:utf-8
 import pymysql
 import logging
 logging.basicConfig(filename='info.log', filemode="w", level=logging.DEBUG)
@@ -49,6 +50,7 @@ class MyDataBase:
             self.db.rollback()
             logging.info('select error information：{0}'.format(e))
             print('query error information：{0}'.format(e))
+        return self.fetchall()
  
      #modify function
      def  modify(self,sql = ' '):
@@ -85,18 +87,13 @@ class MyDataBase:
      def close(self):
          self.db.close()
 
-def main():
-    mydb = MyDataBase()
-    mydb.connect('47.xx.xxx.xxx','root', 'zswzswzsw', 3306,'wordpress',"utf8")
-    data = mydb.version_test()
-    logging.info(data)
-    mydb.close()
-   # creat_table(db,'company_news')
-   #  cursor = db.cursor()
-   #  sql = 'INSERT INTO company_news(name, time,deleted_at) ' \
-   #        'values(\'NetEye\', \'2017-01-13 21:35:23\',null)'
-   #  print(sql)
-   #  cursor.execute(sql)
-
 if __name__ == '__main__':
-    main()
+    mydb = MyDataBase()
+    mydb.connect('47.xx.xxx.xxx', 'root', 'keywords', 3306, 'database_name', "utf8")
+    data = mydb.version_test()
+    print(data)  #get database version for test the connect status
+    sql = "select * from wp_posts limit 1"
+    #sql = "select post_content from wp_posts where post_title='第二讲 cs224n系列之word2vec &词向量'"
+    print(sql)
+    print(mydb.query(sql))
+    mydb.close()
